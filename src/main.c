@@ -19,8 +19,8 @@
   @brief Main library implementation
   @author Ilya Buravov (ilburale@gmail.com)
   @details This file contains the main implementation of the library functions.
-          It serves as a template for the actual library implementation.
-          Replace the example function with your actual library functions.
+           It serves as a template for the actual library implementation.
+           Replace the example function with your actual library functions.
 */
 
 #include <stdio.h>
