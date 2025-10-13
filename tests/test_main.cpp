@@ -1,41 +1,41 @@
 /*
- * Copyright 2025 Ilya Buravov
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+  Copyright 2025 Ilya Buravov
 
-/**
- * @file test_main.c
- * @brief Google Test framework for mylib
- * @author Ilya Buravov (ilburale@gmail.com)
- * @details This file provides Google Test framework integration for the library.
- *          It includes test cases using Google Test macros and can be extended
- *          with additional test functions. The framework provides comprehensive
- *          testing capabilities with detailed output and assertions.
- */
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+/*
+  @file test_main.c
+  @brief Google Test framework for mylib
+  @author Ilya Buravov (ilburale@gmail.com)
+  @details This file provides Google Test framework integration for the library.
+          It includes test cases using Google Test macros and can be extended
+          with additional test functions. The framework provides comprehensive
+          testing capabilities with detailed output and assertions.
+*/
 
 #include <gtest/gtest.h>
 
 // Include your library header here
 // #include "mylib.h"
 
-/**
- * @brief Test suite for basic functionality
- * @details This test suite demonstrates how to write test cases using Google Test.
- *          It includes basic assertion tests and commented examples for testing
- *          actual library functions. Add your own test cases here following the
- *          same pattern.
- */
+/*
+  @brief Test suite for basic functionality
+  @details This test suite demonstrates how to write test cases using Google Test.
+          It includes basic assertion tests and commented examples for testing
+          actual library functions. Add your own test cases here following the
+          same pattern.
+*/
 class MyLibBasicTest : public ::testing::Test
 {
 protected:
@@ -52,10 +52,10 @@ protected:
   }
 };
 
-/**
- * @brief Test basic assertion functionality
- * @details This test verifies that the basic testing infrastructure is working.
- */
+/*
+  @brief Test basic assertion functionality
+  @details This test verifies that the basic testing infrastructure is working.
+*/
 TEST_F (MyLibBasicTest, BasicAssertionTest)
 {
   EXPECT_EQ (1, 1) << "Basic assertion test should pass";
@@ -63,10 +63,10 @@ TEST_F (MyLibBasicTest, BasicAssertionTest)
   EXPECT_FALSE (false) << "False should be false";
 }
 
-/**
- * @brief Test string operations
- * @details Example test for string-related functionality.
- */
+/*
+  @brief Test string operations
+  @details Example test for string-related functionality.
+*/
 TEST_F (MyLibBasicTest, StringOperations)
 {
   const char *test_string = "Hello, World!";
@@ -76,10 +76,10 @@ TEST_F (MyLibBasicTest, StringOperations)
     << "String should not match different value";
 }
 
-/**
- * @brief Test numeric operations
- * @details Example test for numeric functionality.
- */
+/*
+  @brief Test numeric operations
+  @details Example test for numeric functionality.
+*/
 TEST_F (MyLibBasicTest, NumericOperations)
 {
   int a = 5;
