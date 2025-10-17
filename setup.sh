@@ -177,6 +177,7 @@ discover_files_to_process() {
         -name "CMakeInfo.txt" -o \
         -name "CMakeOptions.txt" -o \
         -name "README.md" -o \
+        -name "Doxyfile" -o \
         -name "*.md" -o \
         -name "*.txt" -o \
         -name "*.cmake" \
