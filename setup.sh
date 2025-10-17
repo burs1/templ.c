@@ -179,7 +179,7 @@ discover_files_to_process() {
         -name "README.md" -o \
         -name "*.md" -o \
         -name "*.txt" -o \
-        -name "*.cmake" -o \
+        -name "*.cmake" \
     \) -not -path "*/build/*" -not -path "*/.git/*" -print0)
     
     # Return the array
