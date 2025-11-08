@@ -10,8 +10,6 @@ project(
   DESCRIPTION "A C library."
 )
 
-enable_testing()
-
 #-----------------------------------------------------------------------------
 # BUILD MODE DETECTION
 #-----------------------------------------------------------------------------
@@ -120,5 +118,6 @@ if(MYLIB_BUILD_EXAMPLE)
 endif()
 
 if(MYLIB_BUILD_TESTS)
+  enable_testing()
   add_subdirectory(tests)
 endif()
