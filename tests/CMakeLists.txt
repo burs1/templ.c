@@ -1,56 +1,60 @@
 #=============================================================================
 # TESTS CONFIGURATION
 #=============================================================================
-# Find Google Test
-find_package(GTest QUIET)
-if(NOT GTest_FOUND)
-  include(FetchContent)
-  FetchContent_Declare(
-    googletest
-    URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-    DOWNLOAD_EXTRACT_TIMESTAMP true
+
+# Setup CMake options
+set(CMAKE_CXX_STANDARD 17) # GoogleTest requires at least C++17
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Download Google Test
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
+  DOWNLOAD_EXTRACT_TIMESTAMP ON
+)
+# For Windows: Prevent overriding the parent project's compiler/linker settings
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+# Find all test source files
+file(GLOB TEST_SOURCES "*.cpp")
+
+# Create one executable per test source and wire it up
+set(_ALL_TEST_TARGETS "")
+foreach(_SRC IN LISTS TEST_SOURCES)
+  get_filename_component(_NAME "${_SRC}" NAME_WE)
+
+  add_executable(${_NAME} "${_SRC}")
+
+  # Link with the main library and Google Test using official targets
+  target_link_libraries(${_NAME} PRIVATE
+    snort
+    GTest::gtest_main
   )
-  # For Windows: Prevent overriding the parent project's compiler/linker settings
-  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-  FetchContent_MakeAvailable(googletest)
-endif()
 
+  # Apply same compile options as the main library
+  if(SNORT_COMPILE_OPTIONS)
+    target_compile_options(${_NAME} PRIVATE ${SNORT_COMPILE_OPTIONS})
+  endif()
 
-
-# Test source files
-set(TEST_SOURCE_FILES
-  test_main.cpp
-  # add new test source files here...
-)
-
-# Create test executable
-add_executable(test_mylib ${TEST_SOURCE_FILES})
-
-# Link with the main library and Google Test using official targets
-target_link_libraries(test_mylib PRIVATE 
-  mylib
-  GTest::gtest_main
-)
-
-# Apply same compile options as the main library
-target_compile_options(test_mylib PRIVATE ${MYLIB_COMPILE_OPTIONS})
-
-# Set target properties
-set_target_properties(test_mylib PROPERTIES
-    C_STANDARD 99
-    C_STANDARD_REQUIRED ON
-    C_EXTENSIONS OFF
-)
+  list(APPEND _ALL_TEST_TARGETS ${_NAME})
+endforeach()
 
 # Include Google Test module and discover tests automatically
 include(GoogleTest)
-gtest_discover_tests(test_mylib)
+foreach(_TGT IN LISTS _ALL_TEST_TARGETS)
+  gtest_discover_tests(${_TGT})
+endforeach()
 
 # Enable code coverage for tests if requested
-if(MYLIB_ENABLE_COVERAGE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+if(SNORT_ENABLE_COVERAGE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
   if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
-    target_compile_options(test_mylib PRIVATE --coverage)
-    target_link_libraries(test_mylib PRIVATE --coverage)
+    foreach(_TGT IN LISTS _ALL_TEST_TARGETS)
+      target_compile_options(${_TGT} PRIVATE --coverage)
+      target_link_libraries(${_TGT} PRIVATE --coverage)
+    endforeach()
     message(STATUS "Code coverage enabled for tests")
   endif()
 endif()
+
