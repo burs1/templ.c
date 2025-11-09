@@ -3,7 +3,7 @@
 #---------------------------------------------------------------------------
 
 PROJECT_NAME           = "My Library"
-PROJECT_NUMBER         = 1.0.0
+PROJECT_NUMBER         = 0.1.0
 PROJECT_BRIEF          = "A generic C library template with comprehensive documentation examples"
 PROJECT_LOGO           = docs/logo.svg
 
