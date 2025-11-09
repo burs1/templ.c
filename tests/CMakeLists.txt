@@ -29,13 +29,13 @@ foreach(_SRC IN LISTS TEST_SOURCES)
 
   # Link with the main library and Google Test using official targets
   target_link_libraries(${_NAME} PRIVATE
-    snort
+    mylib
     GTest::gtest_main
   )
 
   # Apply same compile options as the main library
-  if(SNORT_COMPILE_OPTIONS)
-    target_compile_options(${_NAME} PRIVATE ${SNORT_COMPILE_OPTIONS})
+  if(MYLIB_COMPILE_OPTIONS)
+    target_compile_options(${_NAME} PRIVATE ${MYLIB_COMPILE_OPTIONS})
   endif()
 
   list(APPEND _ALL_TEST_TARGETS ${_NAME})
@@ -48,7 +48,7 @@ foreach(_TGT IN LISTS _ALL_TEST_TARGETS)
 endforeach()
 
 # Enable code coverage for tests if requested
-if(SNORT_ENABLE_COVERAGE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+if(MYLIB_ENABLE_COVERAGE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
   if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
     foreach(_TGT IN LISTS _ALL_TEST_TARGETS)
       target_compile_options(${_TGT} PRIVATE --coverage)
