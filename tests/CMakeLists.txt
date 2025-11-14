@@ -2,23 +2,11 @@
 # TESTS CONFIGURATION
 #=============================================================================
 
-# Setup CMake options
-set(CMAKE_CXX_STANDARD 17) # GoogleTest requires at least C++17
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-# Download Google Test
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-  DOWNLOAD_EXTRACT_TIMESTAMP ON
-)
-# For Windows: Prevent overriding the parent project's compiler/linker settings
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
+# Add testing dependencies
+add_subdirectory(vendor)
 
 # Find all test source files
-file(GLOB TEST_SOURCES "*.cpp")
+file(GLOB TEST_SOURCES "*.c")
 
 # Create one executable per test source and wire it up
 set(_ALL_TEST_TARGETS "")
@@ -27,10 +15,10 @@ foreach(_SRC IN LISTS TEST_SOURCES)
 
   add_executable(${_NAME} "${_SRC}")
 
-  # Link with the main library and Google Test using official targets
+  # Link with the main library and Check
   target_link_libraries(${_NAME} PRIVATE
     mylib
-    GTest::gtest_main
+    Check::check
   )
 
   # Apply same compile options as the main library
@@ -38,13 +26,10 @@ foreach(_SRC IN LISTS TEST_SOURCES)
     target_compile_options(${_NAME} PRIVATE ${MYLIB_COMPILE_OPTIONS})
   endif()
 
-  list(APPEND _ALL_TEST_TARGETS ${_NAME})
-endforeach()
+  # Add test to CTest
+  add_test(NAME ${_NAME} COMMAND ${_NAME})
 
-# Include Google Test module and discover tests automatically
-include(GoogleTest)
-foreach(_TGT IN LISTS _ALL_TEST_TARGETS)
-  gtest_discover_tests(${_TGT})
+  list(APPEND _ALL_TEST_TARGETS ${_NAME})
 endforeach()
 
 # Enable code coverage for tests if requested

@@ -20,9 +20,6 @@ Diagnostics:
       - performance-*
       - modernize-*
       - bugprone-*
-    Remove:
-      - readability-magic-numbers
-      - modernize-use-trailing-return-type
   UnusedIncludes: Strict
   MissingIncludes: Strict
 
