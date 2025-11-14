@@ -181,7 +181,7 @@ discover_files_to_process() {
         -name "*.md" -o \
         -name "*.txt" -o \
         -name "*.cmake" \
-    \) -not -path "*/build/*" -not -path "*/.git/*" -print0)
+    \) -not -path "*/build/*" -not -path "*/.git/*" -not -path "*/vendor/*" -print0)
     
     # Return the array
     printf '%s\n' "${files[@]}"
