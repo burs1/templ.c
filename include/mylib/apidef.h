@@ -15,7 +15,7 @@
 */
 
 /*
-  @file include/lib/apidef.h
+  @file include/mylib/apidef.h
   @brief API declaration macro for C++ compatibility
   @author Ilya Buravov (ilburale@gmail.com)
   @details This header provides the @ref __MYLIB_API__ macro for declaring
@@ -42,7 +42,7 @@
 
   @par Example:
   @code
-    // In header file (include/lib/main.h):
+    // In header file (include/mylib/main.h):
     __MYLIB_API__ mylib_status_t mylib_init(void);
     __MYLIB_API__ mylib_status_t mylib_process_data(
         const void* data, size_t size, mylib_callback_t callback, void* user_data

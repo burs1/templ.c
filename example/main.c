@@ -25,7 +25,7 @@
 
 #include <stdlib.h>
 
-#include <lib/main.h>
+#include <mylib/main.h>
 
 int main (void)
 {

@@ -25,7 +25,7 @@
 
 #include <stdio.h>
 
-#include "lib/main.h"
+#include "mylib/main.h"
 
 mylib_status_t mylib_init (void)
 {

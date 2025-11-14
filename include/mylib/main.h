@@ -15,7 +15,7 @@
 */
 
 /*
-  @file include/lib/main.h
+  @file include/mylib/main.h
   @brief Main library header file
   @author Ilya Buravov (ilburale@gmail.com)
   @details This header file contains the main function declarations for the library.

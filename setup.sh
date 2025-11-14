@@ -203,6 +203,25 @@ for file in "${FILES_TO_PROCESS[@]}"; do
     fi
 done
 
+# Rename include/mylib directory to include/<project_name>
+if [[ -d "$PROJECT_DIR/include/mylib" ]]; then
+    print_info "Renaming include/mylib/ to include/$PROJECT_NAME/..."
+    mv "$PROJECT_DIR/include/mylib" "$PROJECT_DIR/include/$PROJECT_NAME"
+    print_success "Directory renamed successfully"
+    
+    # Update include paths in source files
+    print_info "Updating include paths from 'mylib/' to '$PROJECT_NAME/'..."
+    while IFS= read -r -d '' file; do
+        if [[ -f "$file" ]]; then
+            sed -i.bak "s|mylib/|$PROJECT_NAME/|g" "$file"
+            rm -f "$file.bak"
+        fi
+    done < <(find "$PROJECT_DIR" -type f \( -name "*.c" -o -name "*.h" -o -name "*.cpp" -o -name "*.hpp" \) \
+        -not -path "*/build/*" -not -path "*/.git/*" -not -path "*/vendor/*" -print0)
+    print_success "Include paths updated successfully"
+else
+    print_warning "Directory include/mylib/ not found, skipping rename"
+fi
 
 # Initialize new git repository
 print_info "Initializing new git repository..."
