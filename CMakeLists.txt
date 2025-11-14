@@ -8,6 +8,7 @@ project(
   "mylib"
   VERSION 0.1.0
   DESCRIPTION "A C library."
+  LANGUAGES C
 )
 
 #-----------------------------------------------------------------------------
@@ -24,24 +25,17 @@ string(
 #-----------------------------------------------------------------------------
 # COMPILER-SPECIFIC SETTINGS
 #-----------------------------------------------------------------------------
-# Configure compiler flags and options for different toolchains
+# Configure compiler flags and options for GCC/Clang toolchains
 set(MYLIB_DEFAULT_BUILD_TYPE "Debug")
 
-if (MSVC)
-  set(MYLIB_COMPILE_OPTIONS
-    /W4
-    # add new msvc compile options here...
-  )
-else()
-  set(MYLIB_COMPILE_OPTIONS
-    -Wall
-    -Wextra
-    -Wpedantic
+set(MYLIB_COMPILE_OPTIONS
+  -Wall
+  -Wextra
+  -Wpedantic
 
-    -Wno-gnu-zero-variadic-macro-arguments
-    # add new clang or gnu compile options here...
-  )
-endif()
+  -Wno-gnu-zero-variadic-macro-arguments
+  # add new clang or gnu compile options here...
+)
 
 #-----------------------------------------------------------------------------
 # CMAKE GLOBAL SETTINGS

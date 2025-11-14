@@ -14,7 +14,8 @@ My Library is a C library template that provides a solid foundation for building
 ### Prerequisites
 
 - CMake 3.16 or higher
-- C17 compatible compiler (GCC, Clang, MSVC)
+- C99 compatible compiler (GCC or Clang)
+- Unix-like operating system (Linux, macOS, BSD)
 - Git (for cloning)
 
 ### Basic Build
@@ -64,8 +65,7 @@ The project supports several CMake options to customize the build:
 ### Compiler-Specific Features
 
 - **GCC/Clang**: Uses `-Wall -Wextra -Wpedantic` with additional warnings
-- **MSVC**: Uses `/W4` for high warning level
-- **All**: Position-independent code enabled, C17 standard enforced
+- Position-independent code enabled, C99 standard enforced
 
 ## Using as a CMake Subdirectory
 

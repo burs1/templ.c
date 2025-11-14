@@ -16,116 +16,49 @@
 
 /*
   @file include/lib/apidef.h
-  @brief API definition macros for cross-platform compatibility
+  @brief API declaration macro for C++ compatibility
   @author Ilya Buravov (ilburale@gmail.com)
-  @details This header file defines macros for proper function export/import
-           declarations across different compilers and platforms. It also
-           provides C++ compatibility through extern "C" linkage.
+  @details This header provides the @ref __MYLIB_API__ macro for declaring
+           public library functions with proper C linkage when used from C++.
 */
 
 #pragma once
 
-/*=============================================================================
-   EXPORT/IMPORT DECLARATION MACROS
- *=============================================================================*/
-
 /*
-  @brief Internal macro for Windows DLL export/import declarations
-  @details This macro handles the Windows-specific __declspec(dllexport/dllimport)
-           declarations for shared libraries. It is automatically defined based
-           on whether the library is being built or consumed.
-
-  @note This macro is internal and should not be used directly in user code.
-        Use @ref __MYLIB_API__ instead.
+  @brief API declaration macro for public library functions
+  @details This macro ensures that library functions can be called from C++
+           code without name mangling issues. When included in C++ code, it
+           expands to `extern "C"` to provide C linkage. In C code, it expands
+           to `extern`.
 
   @par Behavior:
-  - When building shared library on Windows: expands to __declspec(dllexport)
-  - When consuming shared library on Windows: expands to __declspec(dllimport)
-  - On other platforms or static libraries: expands to nothing
-
-  @par Example:
-  @code
-    // When building the library:
-    __MYLIB_DECLSPEC__ int my_function(void);
-    // Expands to: __declspec(dllexport) int my_function(void);
-
-    // When using the library:
-    __MYLIB_DECLSPEC__ int my_function(void);
-    // Expands to: __declspec(dllimport) int my_function(void);
-  @endcode
-*/
-#if defined(__MYLIB_SHARED__) && defined(_MSC_VER)
-#  ifdef __MYLIB_EXPORT__
-#    define __MYLIB_DECLSPEC__ __declspec (dllexport)
-#  else
-#    define __MYLIB_DECLSPEC__ __declspec (dllimport)
-#  endif
-#else
-#  define __MYLIB_DECLSPEC__
-#endif
-
-/*
-  @brief C++ linkage specification macro
-  @details This macro provides proper C linkage when the header is included
-           in C++ code, ensuring functions can be called from C++ without
-           name mangling issues.
-
-  @note This macro is internal and should not be used directly in user code.
-        Use @ref __MYLIB_API__ instead.
-
-  @par Behavior:
-  - When included in C++ code: expands to extern "C"
-  - When included in C code: expands to extern
-
-  @par Example:
-  @code
-    // In C++ code:
-    __MYLIB_EXTERN__ int my_function(void);
-    // Expands to: extern "C" int my_function(void);
-
-    // In C code:
-    __MYLIB_EXTERN__ int my_function(void);
-    // Expands to: extern int my_function(void);
-  @endcode
-*/
-#ifdef __cplusplus
-#  define __MYLIB_EXTERN__ extern "C"
-#else
-#  define __MYLIB_EXTERN__ extern
-#endif
-
-/*=============================================================================
- * PUBLIC API MACRO
- *=============================================================================*/
-
-/*
-  @brief Main API declaration macro for library functions
-  @details This is the primary macro that should be used to declare all
-           public library functions. It automatically handles:
-           - Windows DLL export/import declarations
-           - C++ compatibility through extern "C" linkage
-           - Cross-platform compatibility
+  - In C++ code: expands to `extern "C"`
+  - In C code: expands to `extern`
 
   @par Usage:
-  Place this macro before the return type of any function that should be
-  part of the public library API.
+  Place this macro before the return type of any function that is part of the
+  public library API. It should be used in both header file declarations and
+  source file definitions.
 
   @par Example:
   @code
-    // Function declaration in header file:
-    __MYLIB_API__ int mylib_init(void);
-    __MYLIB_API__ int mylib_process_data(const void* data, size_t size);
+    // In header file (include/lib/main.h):
+    __MYLIB_API__ mylib_status_t mylib_init(void);
+    __MYLIB_API__ mylib_status_t mylib_process_data(
+        const void* data, size_t size, mylib_callback_t callback, void* user_data
+    );
 
-    // Function definition in source file:
-    __MYLIB_API__ int mylib_init(void) {
-        return 0;
+    // In source file (src/main.c):
+    __MYLIB_API__ mylib_status_t mylib_init(void) {
+        return MYLIB_SUCCESS;
     }
   @endcode
 
-  @note This macro should be used for all public API functions.
-  @note The macro automatically handles C++ compatibility.
-
-  @see __MYLIB_DECLSPEC__ for export/import details
-  @see __MYLIB_EXTERN__ for C++ linkage details
+  @note Use this macro for all public API functions to ensure C++ compatibility.
+  @note The macro is a no-op in C code but essential for C++ interoperability.
 */
-#define __MYLIB_API__ __MYLIB_DECLSPEC__ __MYLIB_EXTERN__
+#ifdef __cplusplus
+#  define __MYLIB_API__ extern "C"
+#else
+#  define __MYLIB_API__ extern
+#endif
