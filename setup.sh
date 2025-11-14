@@ -112,15 +112,34 @@ if [[ -d "$PROJECT_DIR" ]]; then
     exit 1
 fi
 
-# Clone the repository
-print_info "Cloning repository..."
-if ! git clone "$REPO_URL" "$PROJECT_DIR"; then
+# Clone the repository with submodules
+print_info "Cloning repository with submodules..."
+if ! git clone --recursive "$REPO_URL" "$PROJECT_DIR"; then
     print_error "Failed to clone repository from $REPO_URL"
     exit 1
 fi
 
-# Remove .git directory to start fresh
+# Save submodule information before removing git metadata
+print_info "Saving submodule information..."
+SUBMODULE_PATHS=()
+SUBMODULE_URLS=()
+if [[ -f "$PROJECT_DIR/.gitmodules" ]]; then
+    CURRENT_PATH=""
+    while IFS= read -r line; do
+        if [[ "$line" =~ ^[[:space:]]*path[[:space:]]*=[[:space:]]*(.*)$ ]]; then
+            CURRENT_PATH="${BASH_REMATCH[1]}"
+            SUBMODULE_PATHS+=("$CURRENT_PATH")
+        elif [[ "$line" =~ ^[[:space:]]*url[[:space:]]*=[[:space:]]*(.*)$ ]] && [[ -n "$CURRENT_PATH" ]]; then
+            SUBMODULE_URLS+=("${BASH_REMATCH[1]}")
+            CURRENT_PATH=""
+        fi
+    done < "$PROJECT_DIR/.gitmodules"
+fi
+
+# Remove .git directory and submodule .git files/directories to start fresh
+print_info "Removing git metadata..."
 rm -rf "$PROJECT_DIR/.git"
+find "$PROJECT_DIR" -name ".git" \( -type f -o -type d \) -exec rm -rf {} + 2>/dev/null || true
 
 print_success "Repository cloned successfully"
 
@@ -228,6 +247,30 @@ print_info "Initializing new git repository..."
 cd "$PROJECT_DIR"
 rm ./setup.sh
 git init
+
+# Re-add submodules if they existed (before git add .)
+if [[ ${#SUBMODULE_PATHS[@]} -gt 0 && ${#SUBMODULE_PATHS[@]} -eq ${#SUBMODULE_URLS[@]} ]]; then
+    print_info "Re-initializing git submodules..."
+    for i in "${!SUBMODULE_PATHS[@]}"; do
+        path="${SUBMODULE_PATHS[$i]}"
+        url="${SUBMODULE_URLS[$i]}"
+        if [[ -n "$path" && -n "$url" ]]; then
+            print_info "Adding submodule at $path"
+            # Remove the directory if it exists (it will be re-added as submodule)
+            if [[ -d "$path" ]]; then
+                rm -rf "$path"
+            fi
+            # Add as submodule
+            if git submodule add "$url" "$path" 2>/dev/null; then
+                print_success "Submodule added: $path"
+            else
+                print_warning "Failed to add submodule at $path, it will be included as regular files"
+            fi
+        fi
+    done
+fi
+
+# Add all files (submodules are already tracked separately)
 git add .
 
 print_success "Project setup completed successfully!"
