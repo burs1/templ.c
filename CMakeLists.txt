@@ -94,11 +94,7 @@ endif()
 target_include_directories(mylib PUBLIC include)
 target_include_directories(mylib PRIVATE .)
 
-target_compile_options(mylib PRIVATE ${MYLIB_COMPILE_OPTIONS})
-
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-  target_compile_definitions(mylib PUBLIC __MYLIB_DEBUG__)
-endif()
+target_compile_options(mylib PRIVATE ${MYLIB_COMPILE_OPTIONS}
 
 if(MYLIB_BUILD_EXAMPLE)
   add_subdirectory(example)
