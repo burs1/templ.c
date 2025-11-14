@@ -18,15 +18,6 @@ ctest --verbose
 ./test_main
 ```
 
-### Test Options
-
-The project supports several CMake options for testing:
-
-| Option | Default | Description |
-|--------|---------|-------------|
-| `MYLIB_BUILD_TESTS` | `ON` (standalone) | Build test programs |
-| `MYLIB_ENABLE_COVERAGE` | `OFF` | Enable code coverage (requires Debug build) |
-
 ### Check Framework Options
 
 Check provides command-line options for test execution:
@@ -47,7 +38,18 @@ Check provides command-line options for test execution:
 
 ### Code Coverage
 
-When `MYLIB_ENABLE_COVERAGE=ON` and build type is `Debug`, code coverage is automatically enabled for tests.
+Code coverage is automatically enabled by default when building tests in `Debug` mode with GCC or Clang. Coverage data is generated in `.gcda` and `.gcno` files.
+
+To generate a coverage report, you can use tools like `gcov` and `lcov`:
+
+```bash
+# After running tests, generate coverage report
+cd build
+lcov --capture --directory . --output-file coverage.info
+lcov --remove coverage.info '/usr/*' --output-file coverage.info
+lcov --list coverage.info
+genhtml coverage.info --output-directory coverage/
+```
 
 ## Test Structure
 

@@ -32,14 +32,20 @@ foreach(_SRC IN LISTS TEST_SOURCES)
   list(APPEND _ALL_TEST_TARGETS ${_NAME})
 endforeach()
 
-# Enable code coverage for tests if requested
-if(MYLIB_ENABLE_COVERAGE AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+# Enable code coverage for tests by default (when Debug build)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   if(CMAKE_C_COMPILER_ID STREQUAL "GNU" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
+    # Enable coverage for test executables
     foreach(_TGT IN LISTS _ALL_TEST_TARGETS)
       target_compile_options(${_TGT} PRIVATE --coverage)
       target_link_libraries(${_TGT} PRIVATE --coverage)
     endforeach()
-    message(STATUS "Code coverage enabled for tests")
+    
+    # Enable coverage for the library target to measure coverage
+    target_compile_options(mylib PRIVATE --coverage)
+    target_link_libraries(mylib PRIVATE --coverage)
+    
+    message(STATUS "Code coverage enabled for tests and library")
   endif()
 endif()
 
