@@ -7,6 +7,7 @@ My Library is a C library template that provides a solid foundation for building
 - [Building the Project](#building-the-project)
 - [Build Options](#build-options)
 - [Using as a CMake Subdirectory](#using-as-a-cmake-subdirectory)
+- [Count Malloc Calls](#count-malloc-calls)
 - [Creating a New Project from This Template](#creating-a-new-project-from-this-template)
 
 ## Building the Project
@@ -86,6 +87,17 @@ set(MYLIB_BUILD_SHARED ON)
 add_subdirectory(mylib)
 target_link_libraries(your_target PRIVATE mylib)
 ```
+
+## Count Malloc Calls
+
+In order to run this script install `uv` python package this manager
+and run this command:
+
+```shell
+./analyze_malloc.py
+```
+
+This script will show graph of malloc usage graph per commit.
 
 ## Creating a New Project from This Template
 
