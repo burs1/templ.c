@@ -94,7 +94,7 @@ endif()
 target_include_directories(mylib PUBLIC include)
 target_include_directories(mylib PRIVATE .)
 
-target_compile_options(mylib PRIVATE ${MYLIB_COMPILE_OPTIONS}
+target_compile_options(mylib PRIVATE ${MYLIB_COMPILE_OPTIONS})
 
 if(MYLIB_BUILD_EXAMPLE)
   add_subdirectory(example)
